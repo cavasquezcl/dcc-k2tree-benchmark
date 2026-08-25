@@ -22,6 +22,12 @@ Instalar dependendencias
 pip install -r requirements.txt
 ```
 
+Descarga el dataset
+
+```
+python src/download_dataset.py
+```
+
 Ejecutar
 
 ```
