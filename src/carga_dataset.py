@@ -28,7 +28,7 @@ destinos_idx = todos_idx[len(origenes):]
 #print(todos_idx, origenes_idx, destinos_idx)
 
 """
-Ej: origenes = [A, B], destinos = [C, D]
+Ej: origenes = [A, B], destinos = [C, A]
 
 todos = [A, B, C, A]
 unicos = [A, B, C] --> índices 0, 1, 2
