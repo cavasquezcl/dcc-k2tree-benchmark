@@ -8,11 +8,13 @@ destinos = data[:, 1]
 cant_origenes = len(origenes)
 cant_destinos = len(destinos)
 
-print(origenes, destinos)
 print("origenes:", cant_origenes)
 print("destinos:", cant_destinos)
+print(origenes, destinos)
 
 todos = np.concatenate([origenes, destinos])
-unicos = np.unique(todos)
+unicos = np.unique(todos)  # lista ordenada
 
-print("unicos:", len(unicos))
+cant_destinos = len(unicos)
+print("\nunicos:", cant_destinos)
+print(unicos)
