@@ -13,8 +13,26 @@ print("destinos:", cant_destinos)
 print(origenes, destinos)
 
 todos = np.concatenate([origenes, destinos])
-unicos = np.unique(todos)  # lista ordenada
 
-cant_destinos = len(unicos)
-print("\nunicos:", cant_destinos)
+# unicos: la lista ordenada
+# todos_idx: posicion de "todos" en "únicos"
+unicos, todos_idx = np.unique(todos, return_inverse=True)
+print("\nunicos:")
 print(unicos)
+
+print("\ntodos_idx")
+print(todos_idx)
+
+origenes_idx = todos_idx[:len(origenes)]
+destinos_idx = todos_idx[len(origenes):]
+#print(todos_idx, origenes_idx, destinos_idx)
+
+"""
+Ej: origenes = [A, B], destinos = [C, D]
+
+todos = [A, B, C, A]
+unicos = [A, B, C] --> índices 0, 1, 2
+todos_idx = [0, 1, 2, 0]
+origenes_idx = todos_idx[:2] = [0, 1] --> índices densos de D y B
+destinos_idx = todos_idx[2:] = [2, 0] --> índices densos de C y A
+"""
