@@ -39,8 +39,16 @@ python main.py
 - Descargar datasets desde internet
 - Preprocesar el dataset
 - Generar el baseline contra lo que va a comparar
+    - función vecinos
+    - función arista
+    - bits
 - Implemenar estructura k2-tree
-- Reperestar con la estructura una matriz de adyacencia de un grafo
+    - reperestar con la estructura una matriz de adyacencia de un grafo
+    - ajustar matriz
+    - submatrices
+    - vecinos
+    - arista
+    - bits
 - Hacer pruebas con distintos valores de k
 - Medir tiempos
 - Buscar combinaciones para minimizar el espacio total que se usa
