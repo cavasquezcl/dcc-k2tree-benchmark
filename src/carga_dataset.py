@@ -53,14 +53,14 @@ print("\nself-loops:", cant_self_loops)
 cant_repetidos = len(pares) - len(np.unique(pares, axis=0))
 print("\naristas repetidas:", cant_repetidos)
 
-# arma el del csr
+# arma el csr
 
 orden = np.argsort(filas)
 filas = filas[orden]
 columnas = columnas[orden]
 
 grado = np.bincount(filas, minlength=n)  # cuenta apariciones
-indptr = np.zeros(n + 1, dtype=np.int64)  # array lleno de de puros 0
+indptr = np.zeros(n + 1, dtype=np.int64)  # array lleno de 0s para contador
 indptr[1:] = np.cumsum(grado)  # suma cuantas aristas tiene cada nodo
 
 indices = columnas
