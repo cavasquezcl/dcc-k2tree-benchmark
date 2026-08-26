@@ -28,10 +28,16 @@ Descarga el dataset
 python src/download_dataset.py
 ```
 
-Ejecutar
+Ejecutar CSR
 
 ```
-python main.py
+python -m src.csr
+```
+
+Ejecutar K2Tree
+
+```
+python -m src.k2tree
 ```
 
 ## Paso a paso
