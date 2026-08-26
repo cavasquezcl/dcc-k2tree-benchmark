@@ -80,25 +80,32 @@ print("\nvecinos(1):", vecinos(1))
 print("vecinos(2):", vecinos(2))
 
 
-def existe_arista(nodo_origen, nodo_destino):
+def existe_arista_lineal(nodo_origen, nodo_destino):
     return nodo_destino in vecinos(nodo_origen)
 
-print("\nexiste_arista(1, 17793):", existe_arista(1, 17793))
-print("existe_arista(1, 0):", existe_arista(1, 0))
-print("existe_arista(2, 74360):", existe_arista(2, 74360))
-print("existe_arista(2, 0):", existe_arista(2, 0))
+
+def existe_arista_binaria(nodo_origen, nodo_destino):
+    vecinos_origen = vecinos(nodo_origen)
+    pos_v_origen = np.searchsorted(vecinos_origen, nodo_destino)
+    return pos_v_origen < len(vecinos_origen) and vecinos_origen[pos_v_origen] == nodo_destino
+
+
+print("\nexiste_arista_lineal(1, 17793):", existe_arista_lineal(1, 17793))
+print("existe_arista_binaria(1, 17793):", existe_arista_binaria(1, 17793))
+print("existe_arista_lineal(1, 0):", existe_arista_lineal(1, 0))
+print("existe_arista_binaria(1, 0):", existe_arista_binaria(1, 0))
+print("existe_arista_lineal(2, 74360):", existe_arista_lineal(2, 74360))
+print("existe_arista_binaria(2, 74360):", existe_arista_binaria(2, 74360))
 
 
 # prueba de tiempo
 
 inicio = time.perf_counter()
-vecinos(1)
+existe_arista_lineal(1, 17793)
 fin = time.perf_counter()
-print("\ntiempo vecinos:", (fin - inicio))
+print("\ntiempo existe_arista_lineal:", (fin - inicio))
 
 inicio = time.perf_counter()
-existe_arista(1, 17793)
+existe_arista_binaria(1, 17793)
 fin = time.perf_counter()
-print("\ntiempo existe_arista:", (fin - inicio))
-
-
+print("tiempo existe_arista_binaria:", (fin - inicio))
