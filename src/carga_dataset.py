@@ -72,11 +72,18 @@ indices = columnas
 print("\nn:", n)
 print("\naristas csr:", len(indices))
 
-
 def vecinos(nodo):
     return indices[indptr[nodo]:indptr[nodo + 1]]
-
 
 print("\nvecinos(1):", vecinos(1))
 
 print("vecinos(2):", vecinos(2))
+
+
+def existe_arista(nodo_origen, nodo_destino):
+    return nodo_destino in vecinos(nodo_origen)
+
+print("\nexiste_arista(1, 17793):", existe_arista(1, 17793))
+print("\nexiste_arista(1, 0):", existe_arista(1, 0))
+print("\nexiste_arista(2, 74360):", existe_arista(2, 74360))
+print("\nexiste_arista(2, 0):", existe_arista(2, 0))
