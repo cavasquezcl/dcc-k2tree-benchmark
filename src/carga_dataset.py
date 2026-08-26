@@ -45,8 +45,25 @@ columnas = destinos_idx
 # verifica que no hayan self-loops ni arists repetidas (dataset ad-hoc)
 pares = np.column_stack([filas, columnas])
 
+# revisa que no hayan self-loops, debería dar 0
 cant_self_loops = (pares[:, 0] == pares[:, 1]).sum()
 print("\nself-loops:", cant_self_loops)
 
+# revisa que no hayan repetidos, debería dar 0
 cant_repetidos = len(pares) - len(np.unique(pares, axis=0))
 print("\naristas repetidas:", cant_repetidos)
+
+# construcción del csr
+
+orden = np.argsort(filas)
+filas = filas[orden]
+columnas = columnas[orden]
+
+grado = np.bincount(filas, minlength=n)
+indptr = np.zeros(n + 1, dtype=np.int64)
+indptr[1:] = np.cumsum(grado)
+
+indices = columnas
+
+print("\nn:", n)
+print("\naristas csr:", len(indices))
