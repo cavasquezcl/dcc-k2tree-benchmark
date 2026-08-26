@@ -1,4 +1,5 @@
 import os
+import time
 
 import numpy as np
 
@@ -76,7 +77,6 @@ def vecinos(nodo):
     return indices[indptr[nodo]:indptr[nodo + 1]]
 
 print("\nvecinos(1):", vecinos(1))
-
 print("vecinos(2):", vecinos(2))
 
 
@@ -84,6 +84,21 @@ def existe_arista(nodo_origen, nodo_destino):
     return nodo_destino in vecinos(nodo_origen)
 
 print("\nexiste_arista(1, 17793):", existe_arista(1, 17793))
-print("\nexiste_arista(1, 0):", existe_arista(1, 0))
-print("\nexiste_arista(2, 74360):", existe_arista(2, 74360))
-print("\nexiste_arista(2, 0):", existe_arista(2, 0))
+print("existe_arista(1, 0):", existe_arista(1, 0))
+print("existe_arista(2, 74360):", existe_arista(2, 74360))
+print("existe_arista(2, 0):", existe_arista(2, 0))
+
+
+# prueba de tiempo
+
+inicio = time.perf_counter()
+vecinos(1)
+fin = time.perf_counter()
+print("\ntiempo vecinos:", (fin - inicio))
+
+inicio = time.perf_counter()
+existe_arista(1, 17793)
+fin = time.perf_counter()
+print("\ntiempo existe_arista:", (fin - inicio))
+
+
