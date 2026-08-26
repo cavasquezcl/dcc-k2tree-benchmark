@@ -1,3 +1,4 @@
+import math
 import os
 import time
 
@@ -111,11 +112,20 @@ fin = time.perf_counter()
 print("tiempo existe_arista_binaria:", (fin - inicio))
 
 
-def bits():
+def bits_numpy():
     return (indptr.nbytes + indices.nbytes) * 8
 
 
 m = len(indices)  # cantidad de aristas
 
-print("\nbits():", bits())
-print("bits() / m:", bits() / m)
+
+def bits_estructura():
+    bits_por_indptr = math.ceil(math.log2(m + 1))
+    bits_por_indice = math.ceil(math.log2(n))
+    return (n + 1) * bits_por_indptr + m * bits_por_indice
+
+
+print("\nbits_numpy():", bits_numpy())
+print("bits_numpy() / m:", bits_numpy() / m)
+print("bits_estructura():", bits_estructura())
+print("bits_estructura() / m:", bits_estructura() / m)
