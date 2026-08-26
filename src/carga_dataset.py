@@ -55,7 +55,7 @@ print("\naristas repetidas:", cant_repetidos)
 
 # arma el csr
 
-orden = np.argsort(filas)
+orden = np.lexsort((columnas, filas))  # ordena por filas y, a empate, por columnas
 filas = filas[orden]
 columnas = columnas[orden]
 
