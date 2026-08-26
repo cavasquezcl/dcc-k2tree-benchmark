@@ -109,3 +109,13 @@ inicio = time.perf_counter()
 existe_arista_binaria(1, 17793)
 fin = time.perf_counter()
 print("tiempo existe_arista_binaria:", (fin - inicio))
+
+
+def bits():
+    return (indptr.nbytes + indices.nbytes) * 8
+
+
+m = len(indices)  # cantidad de aristas
+
+print("\nbits():", bits())
+print("bits() / m:", bits() / m)
