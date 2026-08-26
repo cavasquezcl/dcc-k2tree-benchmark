@@ -1,6 +1,10 @@
+import os
+
 import numpy as np
 
-data = np.loadtxt("../datasets/web-Stanford.txt", dtype=np.int64)
+RUTA_DATASET = os.path.join(os.path.dirname(__file__), "../datasets/web-Stanford.txt")
+
+data = np.loadtxt(RUTA_DATASET, dtype=np.int64)
 
 origenes = data[:, 0]
 destinos = data[:, 1]
@@ -67,3 +71,12 @@ indices = columnas
 
 print("\nn:", n)
 print("\naristas csr:", len(indices))
+
+
+def vecinos(nodo):
+    return indices[indptr[nodo]:indptr[nodo + 1]]
+
+
+print("\nvecinos(1):", vecinos(1))
+
+print("vecinos(2):", vecinos(2))
