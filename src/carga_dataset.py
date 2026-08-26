@@ -1,6 +1,6 @@
 import numpy as np
 
-data = np.loadtxt("../datasets/ca-GrQc.txt", dtype=np.int32)
+data = np.loadtxt("../datasets/ca-GrQc.txt", dtype=np.int64)
 
 origenes = data[:, 0]
 destinos = data[:, 1]
@@ -33,6 +33,6 @@ Ej: origenes = [A, B], destinos = [C, A]
 todos = [A, B, C, A]
 unicos = [A, B, C] --> índices 0, 1, 2
 todos_idx = [0, 1, 2, 0]
-origenes_idx = todos_idx[:2] = [0, 1] --> índices densos de D y B
+origenes_idx = todos_idx[:2] = [0, 1] --> índices densos de A y B
 destinos_idx = todos_idx[2:] = [2, 0] --> índices densos de C y A
 """
