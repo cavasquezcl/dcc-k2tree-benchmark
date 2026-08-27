@@ -1,5 +1,6 @@
 from src.carga_dataset import cargar, RUTA_DATASET
 import numpy as np
+
 class K2Tree:
     def __init__(self, filas, columnas, n, k):
         self.filas = filas
@@ -88,7 +89,17 @@ class K2Tree:
         print(arbol_bits)
         print(hojas_bits)
 
+        print("tamaño normal")
+        import sys
+        print(sys.getsizeof(arbol_bits))
+        print(sys.getsizeof(hojas_bits))
 
+        arbol_bits_np = np.array(arbol_bits, dtype=np.uint8)
+        hojas_bits_np = np.array(hojas_bits, dtype=np.uint8)
+
+        print("tamaño numpy")
+        print(sys.getsizeof(arbol_bits_np))
+        print(sys.getsizeof(hojas_bits_np))
 
 if __name__ == "__main__":
     filas, columnas, n = cargar(RUTA_DATASET)
