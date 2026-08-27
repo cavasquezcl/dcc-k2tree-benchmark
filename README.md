@@ -9,6 +9,11 @@ Requisitos
 - python 3.14
 - pip
 
+En winddows
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
 Crear y activar entorno virtual
 
 ```bash
