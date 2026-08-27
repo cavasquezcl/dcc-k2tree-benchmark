@@ -52,9 +52,15 @@ class K2Tree:
         # fila_offset, col_offset, tamaño, indices_aristas_del_bloque)
         nivel_actual = [(0, 0, tamagno, np.arange(len(filas)))]
         for _ in range(h):
+            siguiente_nivel = []
             print("h")
-            for _ in nivel_actual:
-                print("nivel_actual")
+            for f_off, c_off, tam, idx in nivel_actual:
+                hijo_tam = tam // k
+                f_bloque = filas[idx]
+                c_bloque = columnas[idx]
+                print("tam: ", hijo_tam)
+                print("f: ", f_bloque)
+                print("c: ", c_bloque)
                 for _ in range(k):
                     print("k1")
                     for _ in range(k):
