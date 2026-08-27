@@ -49,6 +49,9 @@ class K2Tree:
         print("tamaño:", tamagno)
         print("altura:", h)
 
+        arbol_bits = []
+        hojas_bits = []
+
         # fila_offset, col_offset, tamaño, indices_aristas_del_bloque)
         nivel_actual = [(0, 0, tamagno, np.arange(len(filas)))]
         for _ in range(h):
@@ -64,8 +67,16 @@ class K2Tree:
                 for _ in range(k):
                     print("k1")
                     for _ in range(k):
+                        arbol_bits.append(1)
+                        hojas_bits.append(0)
+                        siguiente_nivel.append((1, 1, 1, 1))
                         print("k2")
+            nivel_actual = siguiente_nivel
 
+
+        print("binarios construidos")
+        print(arbol_bits)
+        print(hojas_bits)
 
 
 
