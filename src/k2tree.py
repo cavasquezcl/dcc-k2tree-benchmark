@@ -1,5 +1,5 @@
 from src.carga_dataset import cargar, RUTA_DATASET
-
+import numpy as np
 class K2Tree:
     def __init__(self, filas, columnas, n, k):
         self.filas = filas
@@ -7,6 +7,8 @@ class K2Tree:
         self.n = n
         self.k = k
         print("\ninit de K2-Tree")
+
+        self.construir()
 
         """
         k: es lo que varía
@@ -27,8 +29,23 @@ class K2Tree:
         3. adj
         4. neigh -> creport
         """
+    def construir(self):
+        print(self.filas)
+        print(self.columnas)
+        print(self.n)
+        print(self.k)
+
+        tamagno = 1
+        h = 0
+        while tamagno < self.n:
+            tamagno *= self.k
+            h += 1
+
+        print("tamaño:", tamagno)
+        print("altura:", h)
+
 
 
 if __name__ == "__main__":
     filas, columnas, n = cargar(RUTA_DATASET)
-    arbol = K2Tree(filas, columnas, n)
+    arbol = K2Tree(filas, columnas, n, 2)
