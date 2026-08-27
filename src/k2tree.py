@@ -64,13 +64,16 @@ class K2Tree:
                 print("tam: ", hijo_tam)
                 print("f: ", f_bloque)
                 print("c: ", c_bloque)
-                for _ in range(k):
-                    print("k1")
-                    for _ in range(k):
+                for ff in range(k):  #ff -> fila
+                    fila_ini = f_off + ff * hijo_tam
+                    print("k1: ", fila_ini)
+                    for cc in range(k):  # cc -> columna
+                        col_ini = c_off + cc * hijo_tam
+
                         arbol_bits.append(1)
                         hojas_bits.append(0)
                         siguiente_nivel.append((1, 1, 1, 1))
-                        print("k2")
+                        print("k2:", col_ini)
             nivel_actual = siguiente_nivel
 
 
