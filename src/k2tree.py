@@ -11,10 +11,14 @@ class K2Tree:
         # representacion k2-tree
         self.arbol_bits = None
         self.hojas_bits = None
+        self.arbol_bits_sumado = None
 
         print("\ninit de K2-Tree")
 
         self.construir()
+        print("Post construir")
+        print(self.arbol_bits)
+        print(self.arbol_bits_sumado)
 
         """
         k: es lo que varía
@@ -92,6 +96,11 @@ class K2Tree:
         # se guarda el arbol en la instancia
         self.arbol_bits = np.array(arbol_bits, dtype=np.uint8)
         self.hojas_bits = np.array(hojas_bits, dtype=np.uint8)
+
+        self.arbol_bits_sumado = np.concatenate(([0], np.cumsum(self.arbol_bits, dtype=np.int64)))
+
+    def rank(self, i):
+        return self.arbol_bits_sumado[i]
 
 if __name__ == "__main__":
     filas, columnas, n = cargar(RUTA_DATASET)
