@@ -7,6 +7,11 @@ class K2Tree:
         self.columnas = columnas
         self.n = n
         self.k = k
+
+        # representacion k2-tree
+        self.arbol_bits = None
+        self.hojas_bits = None
+
         print("\ninit de K2-Tree")
 
         self.construir()
@@ -84,22 +89,9 @@ class K2Tree:
 
             nivel_actual = siguiente_nivel
 
-
-        print("binarios construidos")
-        print(arbol_bits)
-        print(hojas_bits)
-
-        print("tamaño normal")
-        import sys
-        print(sys.getsizeof(arbol_bits))
-        print(sys.getsizeof(hojas_bits))
-
-        arbol_bits_np = np.array(arbol_bits, dtype=np.uint8)
-        hojas_bits_np = np.array(hojas_bits, dtype=np.uint8)
-
-        print("tamaño numpy")
-        print(sys.getsizeof(arbol_bits_np))
-        print(sys.getsizeof(hojas_bits_np))
+        # se guarda el arbol en la instancia
+        self.arbol_bits = np.array(arbol_bits, dtype=np.uint8)
+        self.hojas_bits = np.array(hojas_bits, dtype=np.uint8)
 
 if __name__ == "__main__":
     filas, columnas, n = cargar(RUTA_DATASET)
