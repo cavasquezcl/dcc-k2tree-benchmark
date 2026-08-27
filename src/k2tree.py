@@ -35,14 +35,31 @@ class K2Tree:
         print(self.n)
         print(self.k)
 
+        filas = self.filas
+        columnas = self.columnas
+        n = self.n
+        k = self.k
+
         tamagno = 1
         h = 0
-        while tamagno < self.n:
-            tamagno *= self.k
+        while tamagno < n:
+            tamagno *= k
             h += 1
 
         print("tamaño:", tamagno)
         print("altura:", h)
+
+        # fila_offset, col_offset, tamaño, indices_aristas_del_bloque)
+        nivel_actual = [(0, 0, tamagno, np.arange(len(filas)))]
+        for _ in range(h):
+            print("h")
+            for _ in nivel_actual:
+                print("nivel_actual")
+                for _ in range(k):
+                    print("k1")
+                    for _ in range(k):
+                        print("k2")
+
 
 
 
