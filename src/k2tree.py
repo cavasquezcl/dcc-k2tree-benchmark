@@ -54,26 +54,33 @@ class K2Tree:
 
         # fila_offset, col_offset, tamaño, indices_aristas_del_bloque)
         nivel_actual = [(0, 0, tamagno, np.arange(len(filas)))]
+
         for _ in range(h):
             siguiente_nivel = []
-            print("h")
+
             for f_off, c_off, tam, idx in nivel_actual:
                 hijo_tam = tam // k
                 f_bloque = filas[idx]
                 c_bloque = columnas[idx]
-                print("tam: ", hijo_tam)
-                print("f: ", f_bloque)
-                print("c: ", c_bloque)
-                for ff in range(k):  #ff -> fila
-                    fila_ini = f_off + ff * hijo_tam
-                    print("k1: ", fila_ini)
-                    for cc in range(k):  # cc -> columna
-                        col_ini = c_off + cc * hijo_tam
 
-                        arbol_bits.append(1)
-                        hojas_bits.append(0)
-                        siguiente_nivel.append((1, 1, 1, 1))
-                        print("k2:", col_ini)
+                for ff in range(k):  #ff -> fila
+                    f_ini = f_off + ff * hijo_tam
+                    f_mascara = (f_bloque >= f_ini) & (f_bloque < f_ini + hijo_tam)
+
+                    for cc in range(k):  # cc -> columna
+                        c_ini = c_off + cc * hijo_tam
+                        c_masc = f_mascara & (c_bloque >= c_ini) & (c_bloque < c_ini + hijo_tam)
+                        hijo_idx = idx[c_masc]
+                        hay_arista = hijo_idx.size > 0
+                        bit = 1 if hay_arista else 0
+
+                        if hijo_tam == 1:
+                            hojas_bits.append(bit)
+                        else:
+                            arbol_bits.append(bit)
+                            if(hay_arista):
+                                siguiente_nivel.append((f_ini, c_ini, hijo_tam, hijo_idx))
+
             nivel_actual = siguiente_nivel
 
 
