@@ -10,6 +10,7 @@ Requisitos
 - pip
 
 En winddows
+
 ```
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
@@ -27,22 +28,17 @@ Instalar dependendencias
 pip install -r requirements.txt
 ```
 
-Descarga el dataset
+Uso. Por defecto usa dataset_minimo.txt
 
 ```
-python src/download_dataset.py
+python main.py
 ```
 
-Ejecutar CSR
+Para elegir el dataset
 
 ```
-python -m src.csr
-```
-
-Ejecutar K2Tree
-
-```
-python -m src.k2tree
+python main.py dataset_minimo.txt
+python main.py web-Stanford.txt
 ```
 
 ## Paso a paso

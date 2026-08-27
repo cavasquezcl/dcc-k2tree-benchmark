@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-RUTA_DATASET = os.path.join(os.path.dirname(__file__), "../datasets/web-Stanford.txt")
+RUTA_DATASET = os.path.join(os.path.dirname(__file__), "../datasets/dataset_minimo.txt")
 
 def cargar(ruta_dataset):
     """
