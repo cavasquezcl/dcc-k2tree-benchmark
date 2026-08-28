@@ -168,3 +168,10 @@ class K2Tree:
                 vecinos.append(c0 + c * l)
 
         return vecinos
+
+    def bits_numpy(self):
+        return (self.arbol_bits.nbytes + self.hojas_bits.nbytes) * 8
+
+    def bits_estructura(self):
+        # este es el tamaño mas chico
+        return len(self.arbol_bits) + len(self.hojas_bits)

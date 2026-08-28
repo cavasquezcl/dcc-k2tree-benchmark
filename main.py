@@ -127,4 +127,13 @@ print(f"csr vecinos: {tiempo_vecinos:.4f}s total, {tiempo_vecinos / cant_muestra
 print(f"k2tree neigh: {tiempo_neigh:.4f}s total, {tiempo_neigh / cant_muestras_nodos * 1e6:.2f}us/query")
 
 
+m = len(filas)  # cantidad de aristas
+
+print("\nIMPORTANTE 4: espacio ocupado")
+print(f"csr    bits_numpy(): {csr.bits_numpy()}  ({csr.bits_numpy() / m:.2f} bits/arista)")
+print(f"csr    bits_estructura(): {csr.bits_estructura()}  ({csr.bits_estructura() / m:.2f} bits/arista)")
+print(f"k2tree bits_numpy(): {arbol.bits_numpy()}  ({arbol.bits_numpy() / m:.2f} bits/arista)")
+print(f"k2tree bits_estructura(): {arbol.bits_estructura()}  ({arbol.bits_estructura() / m:.2f} bits/arista)")
+
+
 print("\n\nfin desde main.py \n")
