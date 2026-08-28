@@ -105,4 +105,26 @@ print(f"csr: {tiempo_csr:.4f}s total, {tiempo_csr / cant_muestras * 1e6:.2f}us/q
 print(f"k2-tree: {tiempo_k2tree:.4f}s total, {tiempo_k2tree / cant_muestras * 1e6:.2f}us/query")
 
 
+# se miden neigh (vecinos) con nodos que tienen al menos una arista
+
+nodos_con_aristas = np.unique(filas)
+cant_muestras_nodos = min(cant_muestras, len(nodos_con_aristas))
+muestra_nodos = rng.choice(nodos_con_aristas, size=cant_muestras_nodos, replace=False)
+
+inicio = time.perf_counter()
+for nodo in muestra_nodos:
+    arbol.neigh(int(nodo))
+tiempo_neigh = time.perf_counter() - inicio
+
+inicio = time.perf_counter()
+for nodo in muestra_nodos:
+    csr.vecinos(int(nodo))
+tiempo_vecinos = time.perf_counter() - inicio
+
+print("\nIMPORTANTE 3: tiempos de listar vecinos")
+print(f"muestras: {cant_muestras_nodos} nodos con al menos una arista")
+print(f"csr vecinos: {tiempo_vecinos:.4f}s total, {tiempo_vecinos / cant_muestras_nodos * 1e6:.2f}us/query")
+print(f"k2tree neigh: {tiempo_neigh:.4f}s total, {tiempo_neigh / cant_muestras_nodos * 1e6:.2f}us/query")
+
+
 print("\n\nfin desde main.py \n")
