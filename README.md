@@ -28,20 +28,13 @@ Instalar dependendencias
 pip install -r requirements.txt
 ```
 
-Uso. Por defecto usa dataset_minimo.txt
+Ejecución
 
 ```
-python main.py
+python main.py amazon.txt
 ```
 
-Para elegir el dataset
-
-```
-python main.py dataset_minimo.txt
-python main.py web-Stanford.txt
-```
-
-## Paso a paso
+## Paso a paso (para la planificación)
 
 - Descargar datasets desde internet
 - Preprocesar el dataset
