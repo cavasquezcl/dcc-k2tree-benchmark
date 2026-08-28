@@ -26,11 +26,11 @@ class CSR:
 
         # revisa que no hayan self-loops, debería dar 0
         cant_self_loops = (pares[:, 0] == pares[:, 1]).sum()
-        print("\nself-loops:", cant_self_loops)
+        print("self-loops:", cant_self_loops)
 
         # revisa que no hayan repetidos, debería dar 0
         cant_repetidos = len(pares) - len(np.unique(pares, axis=0))
-        print("\naristas repetidas:", cant_repetidos)
+        print("aristas repetidas:", cant_repetidos)
 
         # arma el csr
 
@@ -48,9 +48,6 @@ class CSR:
 
     def vecinos(self, nodo):
         return self.indices[self.indptr[nodo]:self.indptr[nodo + 1]]
-
-    def existe_arista_lineal(self, nodo_origen, nodo_destino):
-        return nodo_destino in self.vecinos(nodo_origen)
 
     def existe_arista_binaria(self, nodo_origen, nodo_destino):
         vecinos_origen = self.vecinos(nodo_origen)

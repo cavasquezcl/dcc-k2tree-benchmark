@@ -4,11 +4,11 @@ from src.carga_dataset import cargar, RUTA_DATASET
 import numpy as np
 
 class K2Tree:
-    def __init__(self, filas, columnas, n, k):
+    def __init__(self, filas, columnas, n, k_por_nivel):
         self.filas = filas
         self.columnas = columnas
         self.n = n
-        self.k = k
+        self.k_por_nivel = k_por_nivel  # un k distinto por nivel, ej: [4, 4, 2, 2]
 
         # representacion k2-tree
         self.arbol_bits = None
@@ -18,9 +18,6 @@ class K2Tree:
         print("\ninit de K2-Tree")
 
         self.construir()
-        print("Post construir")
-        print(self.arbol_bits)
-        print(self.arbol_bits_sumado)
 
         """
         k: es lo que varía
@@ -42,34 +39,34 @@ class K2Tree:
         4. neigh -> creport
         """
     def construir(self):
-        print(self.filas)
-        print(self.columnas)
-        print(self.n)
-        print(self.k)
 
         filas = self.filas
         columnas = self.columnas
-        n = self.n
-        k = self.k
+        k_por_nivel = self.k_por_nivel
 
+        h = len(k_por_nivel)
         tamagno = 1
-        h = 0
-        while tamagno < n:
+        for k in k_por_nivel:
             tamagno *= k
-            h += 1
 
-        print("tamaño:", tamagno)
-        print("altura:", h)
+        if tamagno < self.n:
+            raise ValueError(f"k_por_nivel no alcanza n={self.n} tamagno={tamagno}, fixear array k")
+
 
         arbol_bits = []
         hojas_bits = []
+        inicio_nivel = []
 
         # fila_offset, col_offset, tamaño, indices_aristas_del_bloque)
         nivel_actual = [(0, 0, tamagno, np.arange(len(filas)))]
 
         for nivel in range(h):
-            inicio_tiempo_nivel = time.perf_counter()
-            print(f"nivel {nivel}/{h}: {len(nivel_actual)} bloques a procesar...")
+            k = k_por_nivel[nivel]
+
+            print(f"nivel {nivel}/{h} (k={k}): {len(nivel_actual)} bloques a procesar...")
+
+            if nivel < h - 1:
+                inicio_nivel.append(len(arbol_bits))
 
             siguiente_nivel = []
 
@@ -100,14 +97,12 @@ class K2Tree:
 
             nivel_actual = siguiente_nivel
 
-            tiempo_nivel = time.perf_counter() - inicio_tiempo_nivel
-            print(f"{tiempo_nivel:.2f}s")
-
         # se guarda el arbol en la instancia
         self.tamagno = tamagno
         self.h = h
         self.arbol_bits = np.array(arbol_bits, dtype=np.uint8)
         self.hojas_bits = np.array(hojas_bits, dtype=np.uint8)
+        self.inicio_nivel = inicio_nivel
 
         self.arbol_bits_sumado = np.concatenate(([0], np.cumsum(self.arbol_bits, dtype=np.int64)))
 
@@ -115,26 +110,32 @@ class K2Tree:
         return self.arbol_bits_sumado[i]
 
     def adj(self, fila, columna):
-        k = self.k
         tam = self.tamagno
         h = self.h
-        len_arbol = len(self.arbol_bits)
+        k_por_nivel = self.k_por_nivel
+        inicio_nivel = self.inicio_nivel
         hojas_bits = self.hojas_bits
         arbol_bits = self.arbol_bits
 
-        nid = 0  # id del nodo actual (ahora es la raiz)
+        rank_local = 0
 
-        for _ in range(h):
+        for nivel in range(h):
+            k = k_por_nivel[nivel]
             tam //= k
             hijo = (fila // tam) * k + (columna // tam)
-            pos = nid * k * k + hijo
 
-            if pos < len_arbol:
-                if arbol_bits[pos] == 0:
-                    return False
-                nid = self.rank(pos + 1)
-            else:
-                return bool(hojas_bits[pos - len_arbol])
+            if nivel == h - 1:
+                pos = rank_local * k * k + hijo
+                return bool(hojas_bits[pos])
+
+            inicio = inicio_nivel[nivel]
+            pos = inicio + rank_local * k * k + hijo
+
+            if arbol_bits[pos] == 0:
+                return False
+
+            # cuenta los "unos" antes del pos
+            rank_local = self.rank(pos) - self.rank(inicio)
 
             fila %= tam
             columna %= tam
@@ -145,32 +146,34 @@ class K2Tree:
         if self.h == 0:
             return []
 
-        return self._creport(fila, 0, self.tamagno, 0)
-
-    def _creport(self, r, c0, s, nid):
-        k = self.k
-        l = s // k
-        r1 = r // l
-        r = r % l
-
-        len_arbol = len(self.arbol_bits)
         vecinos = []
-
-        for c in range(k):
-            hijo = r1 * k + c
-            pos = nid * k * k + hijo
-
-            if pos < len_arbol:
-                if self.arbol_bits[pos]:
-                    nuevo_nid = self.rank(pos + 1)
-                    vecinos += self._creport(r, c0 + c * l, l, nuevo_nid)
-            elif self.hojas_bits[pos - len_arbol]:
-                vecinos.append(c0 + c * l)
-
+        self._creport(fila, 0, self.tamagno, 0, 0, vecinos)
         return vecinos
 
-    def bits_numpy(self):
-        return (self.arbol_bits.nbytes + self.hojas_bits.nbytes) * 8
+    def _creport(self, fila_local, rank_local, tam, c_off, nivel, vecinos):
+        k = self.k_por_nivel[nivel]
+        tam //= k
+        ff = fila_local // tam
+        fila_local = fila_local % tam
+
+        for cc in range(k):
+            hijo = ff * k + cc
+            col = c_off + cc * tam
+
+            if nivel == self.h - 1:
+                pos = rank_local * k * k + hijo
+                if self.hojas_bits[pos]:
+                    vecinos.append(col)
+                continue
+
+            inicio = self.inicio_nivel[nivel]
+            pos = inicio + rank_local * k * k + hijo
+
+            if self.arbol_bits[pos] == 0:
+                continue
+
+            siguiente_rank = self.rank(pos) - self.rank(inicio)
+            self._creport(fila_local, siguiente_rank, tam, col, nivel + 1, vecinos)
 
     def bits_estructura(self):
         # este es el tamaño mas chico
