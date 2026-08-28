@@ -69,6 +69,11 @@ print("\nrank")
 print("rank(4):", arbol.rank(4))  # da 3
 print("rank(16):", arbol.rank(16))  # da 9
 
+print("\nneigh")
+
+print("csr vecinos(0):", sorted(csr.vecinos(0).tolist()))
+print("k2tree neigh(0):", sorted(arbol.neigh(0)))
+
 
 # miden muchas muestras si existen
 

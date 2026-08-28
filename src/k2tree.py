@@ -63,7 +63,6 @@ class K2Tree:
 
         arbol_bits = []
         hojas_bits = []
-        inicio_nivel = []  # para usarlo en adj
 
         # fila_offset, col_offset, tamaño, indices_aristas_del_bloque)
         nivel_actual = [(0, 0, tamagno, np.arange(len(filas)))]
@@ -72,9 +71,6 @@ class K2Tree:
             inicio_tiempo_nivel = time.perf_counter()
             print(f"nivel {nivel}/{h}: {len(nivel_actual)} bloques a procesar...")
 
-            if nivel < h - 1:
-                inicio_nivel.append(len(arbol_bits))
-
             siguiente_nivel = []
 
             for f_off, c_off, tam, idx in nivel_actual:
@@ -82,11 +78,11 @@ class K2Tree:
                 f_bloque = filas[idx]
                 c_bloque = columnas[idx]
 
-                for ff in range(k):  # ff -> fila
+                for ff in range(k):  # ff -> fila, va afuera
                     f_ini = f_off + ff * hijo_tam
                     f_mascara = (f_bloque >= f_ini) & (f_bloque < f_ini + hijo_tam)
 
-                    for cc in range(k):  # cc -> columna
+                    for cc in range(k):  # cc -> columna, va adentro
                         c_ini = c_off + cc * hijo_tam
                         c_masc = f_mascara & (c_bloque >= c_ini) & (c_bloque < c_ini + hijo_tam)
                         hijo_idx = idx[c_masc]
@@ -94,8 +90,10 @@ class K2Tree:
                         bit = 1 if hay_arista else 0
 
                         if hijo_tam == 1:
+                            # ultimo nivel
                             hojas_bits.append(bit)
                         else:
+                            # hace el bit del hijo (ff, cc) en la posicion ff*k + cc
                             arbol_bits.append(bit)
                             if(hay_arista):
                                siguiente_nivel.append((f_ini, c_ini, hijo_tam, hijo_idx))
@@ -110,7 +108,6 @@ class K2Tree:
         self.h = h
         self.arbol_bits = np.array(arbol_bits, dtype=np.uint8)
         self.hojas_bits = np.array(hojas_bits, dtype=np.uint8)
-        self.inicio_nivel = inicio_nivel
 
         self.arbol_bits_sumado = np.concatenate(([0], np.cumsum(self.arbol_bits, dtype=np.int64)))
 
@@ -121,29 +118,53 @@ class K2Tree:
         k = self.k
         tam = self.tamagno
         h = self.h
-        inicio_nivel = self.inicio_nivel
+        len_arbol = len(self.arbol_bits)
         hojas_bits = self.hojas_bits
         arbol_bits = self.arbol_bits
 
-        rank_local = 0
+        nid = 0  # id del nodo actual (ahora es la raiz)
 
-        for nivel in range(h):
+        for _ in range(h):
             tam //= k
             hijo = (fila // tam) * k + (columna // tam)
-            if nivel == h - 1:
-                pos = rank_local * k * k + hijo
-                return bool(hojas_bits[pos])
+            pos = nid * k * k + hijo
 
-            inicio = inicio_nivel[nivel]
-            pos = inicio + rank_local * k * k + hijo
-
-            if arbol_bits[pos] == 0:
-                return False
-
-            # cuenta los 1s antes del pos
-            rank_local = self.rank(pos) - self.rank(inicio)
+            if pos < len_arbol:
+                if arbol_bits[pos] == 0:
+                    return False
+                nid = self.rank(pos + 1)
+            else:
+                return bool(hojas_bits[pos - len_arbol])
 
             fila %= tam
             columna %= tam
 
         return False
+
+    def neigh(self, fila):
+        if self.h == 0:
+            return []
+
+        return self._creport(fila, 0, self.tamagno, 0)
+
+    def _creport(self, r, c0, s, nid):
+        k = self.k
+        l = s // k
+        r1 = r // l
+        r = r % l
+
+        len_arbol = len(self.arbol_bits)
+        vecinos = []
+
+        for c in range(k):
+            hijo = r1 * k + c
+            pos = nid * k * k + hijo
+
+            if pos < len_arbol:
+                if self.arbol_bits[pos]:
+                    nuevo_nid = self.rank(pos + 1)
+                    vecinos += self._creport(r, c0 + c * l, l, nuevo_nid)
+            elif self.hojas_bits[pos - len_arbol]:
+                vecinos.append(c0 + c * l)
+
+        return vecinos
