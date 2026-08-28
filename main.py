@@ -29,7 +29,9 @@ else:
 filas, columnas, n = cargar(ruta_dataset)
 
 # instancia CSR
+inicio_csr = time.perf_counter()
 csr = CSR(filas, columnas, n)
+tiempo_construir_csr = time.perf_counter() - inicio_csr
 
 inicio = time.perf_counter()
 csr.existe_arista_lineal(1, 17793)
@@ -47,7 +49,13 @@ print("bits_estructura():", csr.bits_estructura())
 print("bits_estructura() / m:", csr.bits_estructura() / len(csr.indices))
 
 # instancia K2Tree
+inicio_k2tree = time.perf_counter()
 arbol = K2Tree(filas, columnas, n, 2)
+tiempo_construir_k2tree = time.perf_counter() - inicio_k2tree
+
+print("\nIMPORTANTE: tiempos de construccion")
+print("csr:", tiempo_construir_csr, "s")
+print("k2tree:", tiempo_construir_k2tree, "s")
 
 print("\nadj")
 
